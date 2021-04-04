@@ -2,7 +2,7 @@ package me.modione.sgplugin.commands;
 
 import java.util.List;
 import me.modione.sgplugin.SGPlugin;
-import me.modione.sgplugin.utils.LootGenerator;
+import me.modione.sgplugin.utils.LootGenerator_old;
 import me.modione.sgplugin.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -21,12 +21,12 @@ public class AddItemCommand implements TabExecutor {
             player.sendMessage(SGPlugin.prefix + ChatColor.RED + "You need to hold a item to use this command.");
             return false;
         }
-        if (LootGenerator.standartLoot.contains(item)) {
+        if (LootGenerator_old.standartLoot.contains(item)) {
             player.sendMessage(SGPlugin.prefix + ChatColor.RED + item.getType().name() + " is now duplicated.");
         } else {
             player.sendMessage(SGPlugin.prefix + ChatColor.GREEN + "You added " + item.getType().name() + " to the loot-table.");
         }
-        LootGenerator.standartLoot.add(item);
+        LootGenerator_old.standartLoot.add(item);
         return true;
     }
 

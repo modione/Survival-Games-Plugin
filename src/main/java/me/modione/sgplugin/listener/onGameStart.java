@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import me.modione.sgplugin.SGPlugin;
 import me.modione.sgplugin.utils.Events;
-import me.modione.sgplugin.utils.LootGenerator;
+import me.modione.sgplugin.utils.LootGenerator_old;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -30,13 +30,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.BlockInventoryHolder;
 
 public class onGameStart implements Listener {
@@ -88,7 +86,7 @@ public class onGameStart implements Listener {
         for (Location location : SGPlugin.INSTANCE.chests) {
             Block block = Objects.requireNonNull(location.getWorld()).getBlockAt(location);
             if (block.getType() != Material.CHEST) block.setType(Material.CHEST);
-            LootGenerator.generateChestLoot((Chest) block.getState());
+            LootGenerator_old.generateChestLoot((Chest) block.getState());
         }
         id = Bukkit.getScheduler().scheduleSyncRepeatingTask(SGPlugin.INSTANCE, () -> {
             for (Player player : playersig) {

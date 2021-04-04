@@ -49,7 +49,7 @@ public class Events implements Listener {
             if (integer.get() == 0) {
                 for (Block block : refills.keySet()) {
                     Chest chest = (Chest) block.getState();
-                    LootGenerator.generateChestLoot(chest);
+                    LootGenerator_old.generateChestLoot(chest);
                 }
                 for (ArmorStand stand : refills.values()) {
                     stand.remove();

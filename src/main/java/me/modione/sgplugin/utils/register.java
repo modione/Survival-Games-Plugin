@@ -30,11 +30,11 @@ public class register {
         File chests = new File(SGPlugin.INSTANCE.path + "chests.json");
         File locations = new File(SGPlugin.INSTANCE.path + "locations.json");
         try {
-            LootGenerator.standartLoot = new ArrayList<>();
+            LootGenerator_old.standartLoot = new ArrayList<>();
             FileConfig loot = new FileConfig("loottable.yml");
             for (int i = 0; i < 1000; i++) {
                 if (!loot.contains(String.valueOf(i))) break;
-                LootGenerator.standartLoot.add(loot.getItemStack(String.valueOf(i)));
+                LootGenerator_old.standartLoot.add(loot.getItemStack(String.valueOf(i)));
             }
             Gson gson = new Gson();
             List<JsonObject> chestss = gson.fromJson(new FileReader(chests), new TypeToken<List<JsonObject>>() {
@@ -58,9 +58,9 @@ public class register {
             SGPlugin.INSTANCE.log(SGPlugin.prefix + ChatColor.RED + "An error occurred while reading the files.");
             SGPlugin.INSTANCE.locations = new ArrayList<>();
             SGPlugin.INSTANCE.chests = new ArrayList<>();
-            LootGenerator.standartLoot = new ArrayList<>();
+            LootGenerator_old.standartLoot = new ArrayList<>();
         }
-        SGPlugin.INSTANCE.startable = chests.exists() && locations.exists() && !SGPlugin.INSTANCE.chests.isEmpty() && !SGPlugin.INSTANCE.locations.isEmpty() && !LootGenerator.standartLoot.isEmpty();
+        SGPlugin.INSTANCE.startable = chests.exists() && locations.exists() && !SGPlugin.INSTANCE.chests.isEmpty() && !SGPlugin.INSTANCE.locations.isEmpty() && !LootGenerator_old.standartLoot.isEmpty();
         manager.registerEvents(new Listener(), SGPlugin.INSTANCE);
         manager.registerEvents(new onGameStart(), SGPlugin.INSTANCE);
         manager.registerEvents(new Events(), SGPlugin.INSTANCE);
@@ -72,7 +72,7 @@ public class register {
         Objects.requireNonNull(Bukkit.getPluginCommand("removeitem")).setExecutor(new RemoveItemCommand());
         Objects.requireNonNull(Bukkit.getPluginCommand("listitems")).setExecutor(new ListItemsCommand());
         Bukkit.getScheduler().scheduleSyncRepeatingTask(SGPlugin.INSTANCE, () -> {
-            SGPlugin.INSTANCE.startable = !SGPlugin.INSTANCE.chests.isEmpty() && !SGPlugin.INSTANCE.locations.isEmpty() && !LootGenerator.standartLoot.isEmpty();
+            SGPlugin.INSTANCE.startable = !SGPlugin.INSTANCE.chests.isEmpty() && !SGPlugin.INSTANCE.locations.isEmpty() && !LootGenerator_old.standartLoot.isEmpty();
             if (!onGameEnd.end) return;
             onGameEnd.end = false;
             Bukkit.getScheduler().cancelTask(onGameEnd.id);
@@ -81,7 +81,7 @@ public class register {
             SGPlugin.INSTANCE.log(SGPlugin.prefix + ChatColor.RED + "[ERROR] you can't play this plugin due to missing information about chests, loot-table or locations");
             System.out.println("Locations are available: " + !SGPlugin.INSTANCE.locations.isEmpty());
             System.out.println("Positions are available: " + !SGPlugin.INSTANCE.locations.isEmpty());
-            System.out.println("Loot-Table items are available: " + !LootGenerator.standartLoot.isEmpty());
+            System.out.println("Loot-Table items are available: " + !LootGenerator_old.standartLoot.isEmpty());
         }
     }
 }

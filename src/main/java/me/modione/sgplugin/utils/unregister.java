@@ -38,8 +38,8 @@ public class unregister {
                 object.addProperty("world", Objects.requireNonNull(location.getWorld()).getName());
                 chestss.add(object);
             }
-            for (ItemStack item : LootGenerator.standartLoot) {
-                loot.set(String.valueOf(LootGenerator.standartLoot.indexOf(item)), item);
+            for (ItemStack item : LootGenerator_old.standartLoot) {
+                loot.set(String.valueOf(LootGenerator_old.standartLoot.indexOf(item)), item);
             }
             loot.saveconfig();
             path.mkdirs();

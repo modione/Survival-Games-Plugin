@@ -2,7 +2,7 @@ package me.modione.sgplugin.commands;
 
 import java.util.List;
 import me.modione.sgplugin.SGPlugin;
-import me.modione.sgplugin.utils.LootGenerator;
+import me.modione.sgplugin.utils.LootGenerator_old;
 import me.modione.sgplugin.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -18,7 +18,7 @@ public class ListItemsCommand implements TabExecutor {
         Player player = (Player) sender;
         StringBuilder builder = new StringBuilder();
         builder.append(SGPlugin.prefix);
-        for (ItemStack tem : LootGenerator.standartLoot) {
+        for (ItemStack tem : LootGenerator_old.standartLoot) {
             builder.append(ChatColor.AQUA + tem.getType().name()).append(ChatColor.GREEN +", ");
         }
         player.sendMessage(String.valueOf(builder));

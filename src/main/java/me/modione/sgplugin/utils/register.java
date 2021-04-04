@@ -55,14 +55,12 @@ public class register {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            SGPlugin.INSTANCE.log(ChatColor.RED + "An error occurred while reading the files.");
+            SGPlugin.INSTANCE.log(SGPlugin.prefix + ChatColor.RED + "An error occurred while reading the files.");
             SGPlugin.INSTANCE.locations = new ArrayList<>();
             SGPlugin.INSTANCE.chests = new ArrayList<>();
             LootGenerator.standartLoot = new ArrayList<>();
         }
         SGPlugin.INSTANCE.startable = chests.exists() && locations.exists() && !SGPlugin.INSTANCE.chests.isEmpty() && !SGPlugin.INSTANCE.locations.isEmpty() && !LootGenerator.standartLoot.isEmpty();
-        chests.delete();
-        locations.delete();
         manager.registerEvents(new Listener(), SGPlugin.INSTANCE);
         manager.registerEvents(new onGameStart(), SGPlugin.INSTANCE);
         manager.registerEvents(new Events(), SGPlugin.INSTANCE);
@@ -80,7 +78,7 @@ public class register {
             Bukkit.getScheduler().cancelTask(onGameEnd.id);
         }, 10, 5);
         if (!SGPlugin.INSTANCE.startable) {
-            SGPlugin.INSTANCE.log(ChatColor.RED + "[ERROR] you can't play this plugin due to missing information about chests, loot-table or locations");
+            SGPlugin.INSTANCE.log(SGPlugin.prefix + ChatColor.RED + "[ERROR] you can't play this plugin due to missing information about chests, loot-table or locations");
             System.out.println("Locations are available: " + !SGPlugin.INSTANCE.locations.isEmpty());
             System.out.println("Positions are available: " + !SGPlugin.INSTANCE.locations.isEmpty());
             System.out.println("Loot-Table items are available: " + !LootGenerator.standartLoot.isEmpty());

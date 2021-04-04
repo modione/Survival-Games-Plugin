@@ -19,15 +19,15 @@ public class AddChestCommand implements TabExecutor {
         Player player = (Player) sender;
         Block targetblock = player.getTargetBlock(null, 100);
         if ((targetblock.getWorld().getEnvironment() != World.Environment.NORMAL)) {
-            player.sendMessage(ChatColor.RED + "You can only add chests that are in the overworld.");
+            player.sendMessage(SGPlugin.prefix + ChatColor.RED + "You can only add chests that are in the overworld.");
             return false;
         }
         if (targetblock.getType() != Material.CHEST) {
-            player.sendMessage(ChatColor.RED + "You are not looking at a chest");
+            player.sendMessage(SGPlugin.prefix + ChatColor.RED + "You are not looking at a chest");
             return false;
         } else {
             SGPlugin.INSTANCE.chests.add(targetblock.getLocation());
-            player.sendMessage(ChatColor.GREEN + "Added the chest to the chests in the game!");
+            player.sendMessage(SGPlugin.prefix + ChatColor.GREEN + "Added the chest to the chests in the game!");
         }
         return true;
     }

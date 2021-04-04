@@ -20,6 +20,7 @@ public class onGameEnd {
         onGameStart.world.setPVP(true);
         end = true;
         Events.Terminate();
+        onGameStart.tplocs.clear();
     }
 
     public static void ListenforEnd() {
@@ -46,6 +47,7 @@ public class onGameEnd {
                 onGameStart.gamestarted = false;
                 end = true;
                 onGameStart.world.setPVP(true);
+                onGameStart.tplocs.clear();
             }
         }, 5, 5);
     }

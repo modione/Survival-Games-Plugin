@@ -1,8 +1,10 @@
 package me.modione.sgplugin.commands;
 
 import java.util.List;
+import me.modione.sgplugin.SGPlugin;
 import me.modione.sgplugin.utils.LootGenerator;
 import me.modione.sgplugin.utils.utils;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -15,8 +17,9 @@ public class ListItemsCommand implements TabExecutor {
         if (!utils.perms("SG.items", sender)) return false;
         Player player = (Player) sender;
         StringBuilder builder = new StringBuilder();
+        builder.append(SGPlugin.prefix);
         for (ItemStack tem : LootGenerator.standartLoot) {
-            builder.append(tem.getType().name()).append(", ");
+            builder.append(ChatColor.AQUA + tem.getType().name()).append(ChatColor.GREEN +", ");
         }
         player.sendMessage(String.valueOf(builder));
         return true;

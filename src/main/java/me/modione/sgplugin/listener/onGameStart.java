@@ -44,13 +44,14 @@ public class onGameStart implements Listener {
     public static List<Player> playersig = new ArrayList<>();
     public static List<Player> spectator = new ArrayList<>();
     public static HashMap<Location, Material> oldnewblock = new HashMap<>();
+    public static HashMap<Player, Location> tplocs = new HashMap<>();
     public static World world;
     public static int id;
 
     public static void PrepareGame() {
         gameprepared = true;
         List<String> sprueche = Arrays.asList("Go away :(", "Game is full!", "Imagine not being able to play", "this server is too small for us two", "Niemand mag dich", "BigMac bannt dich weg", "You are banned from this server", "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-        HashMap<Player, Location> tplocs = new HashMap<>();
+
         world = SGPlugin.INSTANCE.locations.get(0).getWorld();
         assert world != null;
         world.setPVP(false);
@@ -100,13 +101,13 @@ public class onGameStart implements Listener {
             for (Location loc : oldnewblock.keySet()) {
                 loc.getBlock().setType(oldnewblock.get(loc));
             }
-            Bukkit.broadcastMessage(ChatColor.RED + "PVP will be enabled in 1 minute");
+            Bukkit.broadcastMessage(SGPlugin.prefix + ChatColor.RED + "PVP will be enabled in 1 minute");
         }, 120);
     }
 
     public static void StartGame() {
         gamestarted = true;
-        Bukkit.broadcastMessage(ChatColor.RED + "A Game has started!");
+        Bukkit.broadcastMessage(SGPlugin.prefix + ChatColor.RED + "A Game has started!");
         onGameEnd.end = false;
         onGameEnd.ListenforEnd();
         Events.startEvents();
@@ -121,7 +122,16 @@ public class onGameStart implements Listener {
 
     @EventHandler
     public void on_Move(PlayerMoveEvent event) {
-        if (gameprepared && !gamestarted && playersig.contains(event.getPlayer())) event.setCancelled(true);
+        if (gameprepared && !gamestarted && playersig.contains(event.getPlayer())) {
+            if(event.getTo() == null) return;
+            Location spawn = tplocs.get(event.getPlayer());
+            double distX = spawn.getX() - event.getTo().getX();
+            double distY = spawn.getY() - event.getTo().getY();
+            double distZ = spawn.getZ() - event.getTo().getZ();
+            if(-0.5 > distX || distX > 0.5 || -2.0 > distY || distY < 2.0 || -0.5 > distZ || distZ > 0.5) {
+                event.getPlayer().teleport(spawn);
+            }
+        }
     }
 
     @EventHandler

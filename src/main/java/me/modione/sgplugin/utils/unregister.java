@@ -54,7 +54,7 @@ public class unregister {
             chest.close();
             loc.close();
         } catch (IOException e) {
-            System.out.println("There was an Error while writing the files :(");
+            SGPlugin.INSTANCE.log(SGPlugin.prefix + "There was an Error while writing the files :(");
         }
     }
 }

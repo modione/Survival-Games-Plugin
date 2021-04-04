@@ -18,7 +18,7 @@ public class AddLocationCommand implements TabExecutor {
         Player player = (Player) sender;
         Location l = player.getLocation();
         if ((l.getWorld().getEnvironment() != World.Environment.NORMAL)) {
-            player.sendMessage(ChatColor.RED + "You can only add locations that are in the overworld.");
+            player.sendMessage(SGPlugin.prefix + ChatColor.RED + "You can only add locations that are in the overworld.");
             return false;
         }
         int x = (int) l.getX();
@@ -26,7 +26,7 @@ public class AddLocationCommand implements TabExecutor {
         int z = (int) l.getZ();
         Location location = new Location(player.getWorld(), x, y, z);
         SGPlugin.INSTANCE.locations.add(location);
-        player.sendMessage(ChatColor.GREEN + "Successfully added the location to the spawn locations");
+        player.sendMessage(SGPlugin.prefix + ChatColor.GREEN + "Successfully added the location to the spawn locations");
         return false;
     }
 

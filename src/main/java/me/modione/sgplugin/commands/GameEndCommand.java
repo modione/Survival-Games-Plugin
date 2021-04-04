@@ -1,6 +1,7 @@
 package me.modione.sgplugin.commands;
 
 import java.util.List;
+import me.modione.sgplugin.SGPlugin;
 import me.modione.sgplugin.listener.onGameEnd;
 import me.modione.sgplugin.listener.onGameStart;
 import me.modione.sgplugin.utils.utils;
@@ -14,7 +15,7 @@ public class GameEndCommand implements TabExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!utils.perms("SG.end", sender, false)) return false;
         if (!onGameStart.gamestarted) {
-            sender.sendMessage(ChatColor.RED + "There is no game running yet!");
+            sender.sendMessage(SGPlugin.prefix + ChatColor.RED + "There is no game running yet!");
             return false;
         }
         onGameEnd.EndGame();

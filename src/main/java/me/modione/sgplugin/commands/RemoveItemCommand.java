@@ -1,6 +1,7 @@
 package me.modione.sgplugin.commands;
 
 import java.util.List;
+import me.modione.sgplugin.SGPlugin;
 import me.modione.sgplugin.utils.LootGenerator;
 import me.modione.sgplugin.utils.utils;
 import org.bukkit.ChatColor;
@@ -17,14 +18,14 @@ public class RemoveItemCommand implements TabExecutor {
         Player player = (Player) sender;
         ItemStack item = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
         if (item == null) {
-            player.sendMessage(ChatColor.RED + "You need to hold a item to use this command.");
+            player.sendMessage(SGPlugin.prefix + ChatColor.RED + "You need to hold a item to use this command.");
             return false;
         }
         if (!LootGenerator.standartLoot.contains(item)) {
-            player.sendMessage(ChatColor.RED + item.getType().name() + " is not in the loot-table.");
+            player.sendMessage(SGPlugin.prefix + ChatColor.RED + item.getType().name() + " is not in the loot-table.");
             return false;
         } else {
-            player.sendMessage(ChatColor.GREEN + "Removed " + item.getType().name() + " from the loot-table");
+            player.sendMessage(SGPlugin.prefix + ChatColor.GREEN + "Removed " + item.getType().name() + " from the loot-table");
             LootGenerator.standartLoot.remove(item);
         }
         return true;

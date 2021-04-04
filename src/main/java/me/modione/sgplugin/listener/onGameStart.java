@@ -55,17 +55,19 @@ public class onGameStart implements Listener {
         assert world != null;
         world.setPVP(false);
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            // Goes through all online players and kicks them if there are less locations than online players
             Collection<? extends Player> online = Bukkit.getOnlinePlayers();
             if (!onlinePlayer.isOp() && online.size() > SGPlugin.INSTANCE.locations.size()) {
                 onlinePlayer.kickPlayer(sprueche.get(random.nextInt(sprueche.size())));
             } else if (onlinePlayer.isOp() && online.size() > SGPlugin.INSTANCE.locations.size()) {
                 onlinePlayer.sendMessage(ChatColor.RED + sprueche.get(random.nextInt(sprueche.size())));
             } else {
+                //Gets executed when a players "joins" the game
                 Location loc = SGPlugin.INSTANCE.locations.get(random.nextInt(SGPlugin.INSTANCE.locations.size()));
                 while (tplocs.containsValue(loc)) {
                     loc = SGPlugin.INSTANCE.locations.get(random.nextInt(SGPlugin.INSTANCE.locations.size()));
                 }
-                Location loc2place = loc.add(0, -2, 0).clone();
+                Location loc2place = loc.clone().add(0, -2, 0);
                 tplocs.put(onlinePlayer, loc);
                 onlinePlayer.teleport(loc);
                 onlinePlayer.getInventory().clear();

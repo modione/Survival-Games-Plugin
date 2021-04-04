@@ -17,6 +17,7 @@ public class onGameEnd {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendTitle(ChatColor.RED + "The game ended", ":(", 5, 20, 5);
         }
+        onGameStart.world.setPVP(true);
         end = true;
         Events.Terminate();
     }

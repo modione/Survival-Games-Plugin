@@ -2,7 +2,7 @@ package me.modione.sgplugin.commands;
 
 import java.util.List;
 import me.modione.sgplugin.SGPlugin;
-import me.modione.sgplugin.utils.utils;
+import me.modione.sgplugin.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 public class AddLocationCommand implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!utils.perms("SG.addlocation", sender)) return false;
+        if (!Utils.checkPermissions("SG.addlocation", sender)) return false;
         Player player = (Player) sender;
         Location l = player.getLocation();
         if ((l.getWorld().getEnvironment() != World.Environment.NORMAL)) {

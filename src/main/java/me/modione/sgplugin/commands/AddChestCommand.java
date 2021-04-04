@@ -2,7 +2,7 @@ package me.modione.sgplugin.commands;
 
 import java.util.List;
 import me.modione.sgplugin.SGPlugin;
-import me.modione.sgplugin.utils.utils;
+import me.modione.sgplugin.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 public class AddChestCommand implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!utils.perms("SG.addchest", sender)) return false;
+        if (!Utils.checkPermissions("SG.addchest", sender)) return false;
         Player player = (Player) sender;
         Block targetblock = player.getTargetBlock(null, 100);
         if ((targetblock.getWorld().getEnvironment() != World.Environment.NORMAL)) {

@@ -3,7 +3,7 @@ package me.modione.sgplugin.commands;
 import java.util.List;
 import me.modione.sgplugin.SGPlugin;
 import me.modione.sgplugin.utils.LootGenerator;
-import me.modione.sgplugin.utils.utils;
+import me.modione.sgplugin.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 public class RemoveItemCommand implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!utils.perms("SG.items", sender)) return false;
+        if (!Utils.checkPermissions("SG.items", sender)) return false;
         Player player = (Player) sender;
         ItemStack item = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
         if (item == null) {
@@ -33,6 +33,6 @@ public class RemoveItemCommand implements TabExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        return null;
+        return null; // TODO
     }
 }

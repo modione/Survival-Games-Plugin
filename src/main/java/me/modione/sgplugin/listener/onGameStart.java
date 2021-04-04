@@ -29,12 +29,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.BlockInventoryHolder;
 
 public class onGameStart implements Listener {
@@ -151,24 +153,27 @@ public class onGameStart implements Listener {
     }
 
     @EventHandler
-    public void ondmg(EntityDamageEvent event) {
+    public void ondmg(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         if (gameprepared && !gamestarted) {
             event.setCancelled(true);
         }
-    }
-
-    @EventHandler
-    public void on_death(PlayerDeathEvent event) {
-        Player player = event.getEntity();
+        if ((event.getDamage()>=((Player) event.getEntity()).getHealth())) return;
+        Player player = (Player) event.getEntity();
         if (gamestarted && playersig.contains(player)) {
             playersig.remove(player);
             player.spigot().respawn();
             player.setGameMode(GameMode.SPECTATOR);
             spectator.add(player);
+            Bukkit.broadcastMessage(ChatColor.GREEN+event.getDamager().getName()+ChatColor.RED+" killed "+ChatColor.BLUE+event.getEntity().getName());
         }
     }
-
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event) {
+        if (onGameStart.gamestarted&&playersig.contains(event.getEntity())) {
+            event.setDeathMessage(null);
+        }
+    }
     @EventHandler
     public void onSpawn(EntitySpawnEvent event) {
         if (!(event.getEntity() instanceof LivingEntity)) return;

@@ -1,0 +1,156 @@
+package me.modione.sgplugin.listener;
+
+import me.modione.sgplugin.SGPlugin;
+import me.modione.sgplugin.utils.Events;
+import me.modione.sgplugin.utils.LootGenerator;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.BlockInventoryHolder;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class onGameStart implements Listener {
+    public static boolean gamestarted;
+    public static boolean gameprepared;
+    public static Random random = new Random();
+    public static List<Player> playersig = new ArrayList<>();
+    public static List<Player> spectator = new ArrayList<>();
+    public static HashMap<Location, Material> oldnewblock = new HashMap<>();
+    public static World world;
+    public static int id;
+
+    public static void PrepareGame() {
+        gameprepared = true;
+        List<String> sprueche = Arrays.asList("Go away :(", "Game is full!", "Imagine not being able to play", "this server is too small for us two", "Niemand mag dich", "BigMac bannt dich weg", "You are banned from this server", "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+        HashMap<Player, Location> tplocs = new HashMap<>();
+        world = SGPlugin.INSTANCE.locations.get(0).getWorld();
+        assert world != null;
+        world.setPVP(false);
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            Collection<? extends Player> online = Bukkit.getOnlinePlayers();
+            if (!onlinePlayer.isOp() && online.size() > SGPlugin.INSTANCE.locations.size()) {
+                onlinePlayer.kickPlayer(sprueche.get(random.nextInt(sprueche.size())));
+            } else if (onlinePlayer.isOp() && online.size() > SGPlugin.INSTANCE.locations.size()) {
+                onlinePlayer.sendMessage(ChatColor.RED + sprueche.get(random.nextInt(sprueche.size())));
+            } else {
+                Location loc = SGPlugin.INSTANCE.locations.get(random.nextInt(SGPlugin.INSTANCE.locations.size()));
+                while (tplocs.containsValue(loc)) {
+                    loc = SGPlugin.INSTANCE.locations.get(random.nextInt(SGPlugin.INSTANCE.locations.size()));
+                }
+                Location loc2place = loc.add(0, -2, 0).clone();
+                tplocs.put(onlinePlayer, loc);
+                onlinePlayer.teleport(loc);
+                onlinePlayer.getInventory().clear();
+                oldnewblock.put(loc2place, loc2place.getBlock().getType());
+                loc2place.getBlock().setType(Material.GLASS);
+                onlinePlayer.playSound(loc, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+                onlinePlayer.setGameMode(GameMode.SURVIVAL);
+                //noinspection deprecation
+                onlinePlayer.setHealth(onlinePlayer.getMaxHealth());
+                onlinePlayer.setFoodLevel(40);
+            }
+        }
+        playersig.addAll(tplocs.keySet());
+        AtomicInteger count = new AtomicInteger(5);
+        for (Location location : SGPlugin.INSTANCE.chests) {
+            Block block = Objects.requireNonNull(location.getWorld()).getBlockAt(location);
+            if (block.getType() != Material.CHEST) block.setType(Material.CHEST);
+            LootGenerator.generateChestLoot((Chest) block.getState());
+        }
+        id = Bukkit.getScheduler().scheduleSyncRepeatingTask(SGPlugin.INSTANCE, () -> {
+            for (Player player : playersig) {
+                BaseComponent component = new TextComponent(ChatColor.GREEN + "Starting Game in: " + ChatColor.RED + count.get());
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, component);
+            }
+            count.getAndDecrement();
+        }, 20, 20);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(SGPlugin.INSTANCE, () -> {
+            StartGame();
+            Bukkit.getScheduler().cancelTask(id);
+            for (Location loc : oldnewblock.keySet()) {
+                loc.getBlock().setType(oldnewblock.get(loc));
+            }
+            Bukkit.broadcastMessage(ChatColor.RED + "PVP will be enabled in 1 minute");
+        }, 120);
+    }
+
+    public static void StartGame() {
+        gamestarted = true;
+        Bukkit.broadcastMessage(ChatColor.RED + "A Game has started!");
+        onGameEnd.end = false;
+        onGameEnd.ListenforEnd();
+        Events.startEvents();
+    }
+
+    @EventHandler
+    public void on_Break(BlockBreakEvent event) {
+        if (playersig.contains(event.getPlayer()) && gameprepared) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void on_Move(PlayerMoveEvent event) {
+        if (gameprepared && !gamestarted && playersig.contains(event.getPlayer())) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void oninv_open(InventoryOpenEvent event) {
+        if (gameprepared && !gamestarted && playersig.contains(event.getPlayer()) && event.getInventory().getHolder() instanceof BlockInventoryHolder)
+            event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void on_place(BlockPlaceEvent event) {
+        if (gamestarted && playersig.contains(event.getPlayer())) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void interact(PlayerInteractEvent event) {
+        if (gameprepared && !gamestarted && playersig.contains(event.getPlayer())) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void ondmg(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+        if (gameprepared && !gamestarted) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void on_death(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        if (gamestarted && playersig.contains(player)) {
+            playersig.remove(player);
+            player.spigot().respawn();
+            player.setGameMode(GameMode.SPECTATOR);
+            spectator.add(player);
+        }
+    }
+
+    @EventHandler
+    public void onSpawn(EntitySpawnEvent event) {
+        if (!(event.getEntity() instanceof LivingEntity)) return;
+        if (gameprepared) {
+            event.setCancelled(true);
+        }
+    }
+}

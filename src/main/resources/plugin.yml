@@ -1,0 +1,35 @@
+name: SurvivalGames-Plugin
+version: ${project.version}
+main: me.modione.sgplugin.SGPlugin
+api-version: 1.16
+commands:
+  start:
+    description: "Starts the game!"
+  addchest:
+    description: "Adds the chest you are looking at to the chests in the game!"
+  addlocation:
+    description: "Adds a spawn-location too the spawn-locations for new players!"
+  gameend:
+    description: "Ends the game!"
+  additem:
+    description: "Adds an item to the loot table of the chests"
+  removeitem:
+    description: "Removes an item from the loot table of the chests"
+  listitems:
+    description: "Lists the items in the loot table of the chests"
+
+permissions:
+  SG.start:
+    description: "The Permission to start the game"
+    default: op
+  SG.end:
+    description: "The Permission to stop the game"
+  SG.addchest:
+    description: "You can add a chest to the game with this permission"
+    default: op
+  SG.addlocation:
+    description: "You can add locations to the spawn-locations of new players with this permission"
+    default: op
+  SG.items:
+    description: "The permission to list, remove or add items to/from the loot-table"
+    default: op

@@ -1,12 +1,26 @@
 package me.modione.sgplugin.listener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import me.modione.sgplugin.SGPlugin;
 import me.modione.sgplugin.utils.Events;
 import me.modione.sgplugin.utils.LootGenerator;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.LivingEntity;
@@ -22,9 +36,6 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.BlockInventoryHolder;
-
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class onGameStart implements Listener {
     public static boolean gamestarted;

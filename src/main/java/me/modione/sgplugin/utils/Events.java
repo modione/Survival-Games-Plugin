@@ -1,5 +1,9 @@
 package me.modione.sgplugin.utils;
 
+import static me.modione.sgplugin.listener.onGameStart.playersig;
+
+import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import me.modione.sgplugin.SGPlugin;
 import me.modione.sgplugin.listener.onGameStart;
 import net.md_5.bungee.api.ChatMessageType;
@@ -17,11 +21,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.BlockInventoryHolder;
-
-import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static me.modione.sgplugin.listener.onGameStart.playersig;
 
 public class Events implements Listener {
     public static boolean running = false;

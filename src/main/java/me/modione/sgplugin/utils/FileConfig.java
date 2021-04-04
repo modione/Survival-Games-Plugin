@@ -1,10 +1,9 @@
 package me.modione.sgplugin.utils;
 
+import java.io.IOException;
 import me.modione.sgplugin.SGPlugin;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.IOException;
 
 public class FileConfig extends YamlConfiguration {
 

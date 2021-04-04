@@ -2,16 +2,15 @@ package me.modione.sgplugin.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import me.modione.sgplugin.SGPlugin;
-import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import me.modione.sgplugin.SGPlugin;
+import org.bukkit.Location;
+import org.bukkit.inventory.ItemStack;
 
 public class unregister {
     public unregister() {

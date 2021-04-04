@@ -1,12 +1,11 @@
 package me.modione.sgplugin;
 
+import java.util.List;
 import me.modione.sgplugin.utils.register;
 import me.modione.sgplugin.utils.unregister;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.List;
 
 public final class SGPlugin extends JavaPlugin {
     public static SGPlugin INSTANCE;

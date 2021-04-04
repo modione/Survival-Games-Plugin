@@ -1,5 +1,6 @@
 package me.modione.sgplugin.commands;
 
+import java.util.List;
 import me.modione.sgplugin.SGPlugin;
 import me.modione.sgplugin.utils.utils;
 import org.bukkit.ChatColor;
@@ -9,8 +10,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 public class AddLocationCommand implements TabExecutor {
     @Override

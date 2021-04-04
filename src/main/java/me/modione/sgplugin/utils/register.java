@@ -3,8 +3,19 @@ package me.modione.sgplugin.utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import me.modione.sgplugin.SGPlugin;
-import me.modione.sgplugin.commands.*;
+import me.modione.sgplugin.commands.AddChestCommand;
+import me.modione.sgplugin.commands.AddItemCommand;
+import me.modione.sgplugin.commands.AddLocationCommand;
+import me.modione.sgplugin.commands.GameEndCommand;
+import me.modione.sgplugin.commands.ListItemsCommand;
+import me.modione.sgplugin.commands.RemoveItemCommand;
+import me.modione.sgplugin.commands.StartGameCommand;
 import me.modione.sgplugin.listener.Listener;
 import me.modione.sgplugin.listener.onGameEnd;
 import me.modione.sgplugin.listener.onGameStart;
@@ -12,12 +23,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.plugin.PluginManager;
-
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class register {
     public register() {

@@ -1,5 +1,6 @@
 package me.modione.sgplugin.commands;
 
+import java.util.List;
 import me.modione.sgplugin.utils.LootGenerator;
 import me.modione.sgplugin.utils.utils;
 import org.bukkit.command.Command;
@@ -7,8 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 
 public class ListItemsCommand implements TabExecutor {
     @Override

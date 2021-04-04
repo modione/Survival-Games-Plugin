@@ -1,5 +1,6 @@
 package me.modione.sgplugin.commands;
 
+import java.util.List;
 import me.modione.sgplugin.SGPlugin;
 import me.modione.sgplugin.listener.onGameStart;
 import me.modione.sgplugin.utils.utils;
@@ -7,8 +8,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-
-import java.util.List;
 
 public class StartGameCommand implements TabExecutor {
     @Override

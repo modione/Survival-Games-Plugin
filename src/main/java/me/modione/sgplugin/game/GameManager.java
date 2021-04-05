@@ -11,9 +11,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.Instrument;
 import org.bukkit.Location;
-import org.bukkit.Note;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -35,8 +33,8 @@ public class GameManager {
 
     }
 
-    public void joinGame(Player player, boolean asSpecator) {
-        if(asSpecator) spectators.add(player);
+    public void joinGame(Player player, boolean asSpectator) {
+        if(asSpectator) spectators.add(player);
         else players.add(player);
     }
 
@@ -58,7 +56,7 @@ public class GameManager {
     }
 
     private void startGame() {
-        this.state = GameState.PREP;
+        this.state = GameState.LOOT;
         players.forEach(player -> {
             player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_AMBIENT, 1, 1);
             player.sendTitle(ChatColor.GREEN + "Go!!!", ChatColor.YELLOW + "Let the Survival Games Begin!", 10, 60, 15);
@@ -88,6 +86,6 @@ public class GameManager {
     }
 
     public enum GameState {
-        OFF, PREPARED, PREP, PVP, END
+        OFF, PREPARED, LOOT, PVP, END
     }
 }

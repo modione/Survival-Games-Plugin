@@ -31,14 +31,17 @@ public class GameManager {
     private final List<Player> players = new ArrayList<>();
     private final List<Player> spectators = new ArrayList<>();
     private final World world;
-    private final Map<Player, BoundingBox> assignedSpawns = new HashMap<>();
     private final Random random = new Random();
+    private final BoundingBox arena;
+    private final Location lobbyLocation;
     private BukkitTask nextEvent;
 
-    public GameManager(World world, List<Location> spawnLocations, List<Block> chests) {
+    public GameManager(World world, List<Location> spawnLocations, List<Block> chests, BoundingBox arena, Location lobbyLocation) {
         this.world = world;
         this.spawnLocations = spawnLocations;
         this.chests = chests;
+        this.arena = arena;
+        this.lobbyLocation = lobbyLocation;
     }
 
     public void joinGame(Player player, boolean asSpectator) {
@@ -46,47 +49,11 @@ public class GameManager {
         else players.add(player);
     }
 
-    public void prepareGame() {
-        this.state = GameState.PREPARED;
-        players.forEach(player -> {
-            Location spawn = spawnLocations.get(random.nextInt(spawnLocations.size()));
-            assignedSpawns.put(player, BoundingBox.of(spawn, 1, 1, 1));
-            player.teleport(spawn);
-            player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
-        });
-        nextEvent = Utils.createCountdown(5, (format, seconds) -> {
-            players.forEach(player -> {
-                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.GREEN + "The Game is starting in " + ChatColor.RED + seconds));
-            });
-        }, this::startGame);
-    }
-
     private void startGame() {
         this.state = GameState.LOOT;
-        world.setPVP(false);
-        players.forEach(player -> {
-            player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_AMBIENT, 1, 1);
-            player.sendTitle(ChatColor.GREEN + "Go!!!", ChatColor.YELLOW + "Let the Survival Games Begin!", 10, 60, 15);
-        });
-        Bukkit.broadcastMessage(SGPlugin.prefix + ChatColor.GREEN + "The Game has been started!");
-        Bukkit.broadcastMessage(SGPlugin.prefix + ChatColor.YELLOW + "PVP will be enabled in 1 Minute!");
+
         nextEvent = Bukkit.getScheduler().runTaskLater(SGPlugin.INSTANCE, () -> {
-            players.forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 1, 1));
-            nextEvent = Utils.createCountdown(10, (format, seconds) -> {
-                players.forEach(player -> {
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.BLUE + "PvP in " + ChatColor.YELLOW + seconds + ChatColor.BLUE + " seconds!"));
-                });
-            }, () -> {
-                state = GameState.PVP;
-                world.setPVP(true);
-                Bukkit.broadcastMessage(SGPlugin.prefix + ChatColor.GREEN + "PvP is now enabled!");
-                players.forEach(player -> {
-                    player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1, 1);
-                    player.sendTitle(ChatColor.AQUA + "Fight!", ChatColor.BLUE + "PvP is now enabled!", 10, 60, 15);
-                });
-                nextEvent = Bukkit.getScheduler().runTaskLater(SGPlugin.INSTANCE, this::cancelGame, 12000);
-            });
+
         }, 1100);
     }
 
@@ -120,8 +87,20 @@ public class GameManager {
         return state;
     }
 
-    public Map<Player, BoundingBox> getAssignedSpawns() {
-        return assignedSpawns;
+    public List<Location> getSpawnLocations() {
+        return spawnLocations;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public void skipToState(GameState state) {
+        this.state = state;
     }
 
     public enum GameState {

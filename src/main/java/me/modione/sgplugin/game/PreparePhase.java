@@ -8,6 +8,7 @@ import me.modione.sgplugin.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -17,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.BoundingBox;
 
 public class PreparePhase extends GamePhase {
@@ -73,5 +75,10 @@ public class PreparePhase extends GamePhase {
             Player p = (Player) event.getEntity();
             if(gameManager.getPlayers().contains(p)) event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        gameManager.getPlayers().remove(event.getPlayer());
     }
 }

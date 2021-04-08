@@ -35,7 +35,7 @@ public class EndPhase extends GamePhase {
                 FireworkEffect.builder().withFlicker().withTrail().withColor(Color.RED, Color.GREEN).withFade(Color.YELLOW).build());
             fw.setFireworkMeta(meta);
         }
-        gameManager.getSpectators().forEach(player -> player.sendTitle(ChatColor.RED + "Game over!", ChatColor.YELLOW + "You didn't win :/!", 10, 60, 15));
+        gameManager.getSpectators().forEach(player -> player.sendTitle(ChatColor.RED + "Game over!", ChatColor.GREEN + winner.getName() + ChatColor.YELLOW + " won the game!", 10, 60, 15));
     }
 
     @Override

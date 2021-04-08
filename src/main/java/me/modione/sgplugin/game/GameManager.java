@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BoundingBox;
 
 public class GameManager {
-    private int gameState = 0;
+    private int gameState = -1;
     private final List<Location> spawnLocations;
     private final List<Block> chests;
     private final List<Player> players = new ArrayList<>();
@@ -42,6 +42,12 @@ public class GameManager {
         );
     }
 
+    public boolean start() {
+        if(gameState <= -1) return false;
+        next();
+        return true;
+    }
+
     public void joinGame(Player player, boolean asSpectator) {
         if(asSpectator) spectators.add(player);
         else {
@@ -57,7 +63,7 @@ public class GameManager {
     public void next() {
         HandlerList.unregisterAll(currentPhase);
         if(phases.size() <= gameState++) {
-            gameState = 0;
+            gameState = -1;
             return;
         }
         currentPhase = phases.get(gameState);
@@ -66,6 +72,8 @@ public class GameManager {
     }
 
     public void cancelGame() {
+        currentPhase = null;
+        gameState = -1;
         Bukkit.getScheduler().cancelTasks(SGPlugin.INSTANCE);
         world.setPVP(true);
         if(nextEvent != null) nextEvent.cancel();

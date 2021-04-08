@@ -58,6 +58,7 @@ public class PvPPhase extends GamePhase {
             }
             event.setCancelled(true);
             gameManager.getPlayers().remove(player);
+            gameManager.getSpectators().add(player);
             if(gameManager.getPlayers().size() <= 1) {
                 next();
             }

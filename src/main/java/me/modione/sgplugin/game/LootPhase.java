@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class LootPhase extends GamePhase {
 
@@ -20,6 +21,11 @@ public class LootPhase extends GamePhase {
 
     @Override
     public void onStart() {
+        if(gameManager.getPlayers().size() <= 1) {
+            Bukkit.broadcastMessage(SGPlugin.prefix + ChatColor.RED + "You need at least 2 Players in Order to play a game!");
+            gameManager.cancelGame();
+            return;
+        }
         gameManager.getWorld().setPVP(false);
         gameManager.getPlayers().forEach(player -> {
             player.setGameMode(GameMode.SURVIVAL);
@@ -50,5 +56,14 @@ public class LootPhase extends GamePhase {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         if(gameManager.getPlayers().contains(event.getPlayer())) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Bukkit.broadcastMessage(SGPlugin.prefix + ChatColor.RED + event.getPlayer().getName() + ChatColor.AQUA + " left the Game!");
+        gameManager.getPlayers().remove(event.getPlayer());
+        if(gameManager.getPlayers().size() <= 1) {
+            next();
+        }
     }
 }

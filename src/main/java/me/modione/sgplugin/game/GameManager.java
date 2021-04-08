@@ -1,20 +1,14 @@
 package me.modione.sgplugin.game;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import me.modione.sgplugin.SGPlugin;
-import me.modione.sgplugin.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -65,7 +59,7 @@ public class GameManager {
         nextEvent = Bukkit.getScheduler().runTaskLater(SGPlugin.INSTANCE, () -> {
             players.forEach(player -> {
                 player.setGameMode(Bukkit.getDefaultGameMode());
-                player.teleport(assignedSpawns.get(player).getCenter().toLocation(world));
+                player.teleport(this.lobbyLocation);
             });
         }, 600);
     }
@@ -93,6 +87,10 @@ public class GameManager {
 
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public List<Player> getSpectators() {
+        return spectators;
     }
 
     public World getWorld() {

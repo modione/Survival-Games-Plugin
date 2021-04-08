@@ -8,7 +8,14 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 public class PvPPhase extends GamePhase {
@@ -48,5 +55,35 @@ public class PvPPhase extends GamePhase {
     @Override
     public void onCancel() {
         if(task != null) task.cancel();
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        if(!(event.getEntity() instanceof Player) && !gameManager.getPlayers().contains(event.getEntity())) return;
+        Player player = (Player) event.getEntity();
+        if(event.getFinalDamage() >= player.getHealth()) {
+            player.getWorld().strikeLightningEffect(player.getLocation());
+            player.setGameMode(GameMode.SPECTATOR);
+            if(event instanceof EntityDamageByEntityEvent) {
+                EntityDamageByEntityEvent event2 = (EntityDamageByEntityEvent) event;
+                Bukkit.broadcastMessage(SGPlugin.prefix + ChatColor.RED + player.getName() + ChatColor.AQUA + " was killed by " + ChatColor.GREEN + event2.getDamager().getName());
+            } else {
+                Bukkit.broadcastMessage(SGPlugin.prefix + ChatColor.RED + player.getName() + ChatColor.AQUA + " was killed!");
+            }
+            event.setCancelled(true);
+            gameManager.getPlayers().remove(player);
+            if(gameManager.getPlayers().size() <= 1) {
+                next();
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Bukkit.broadcastMessage(SGPlugin.prefix + ChatColor.RED + event.getPlayer().getName() + ChatColor.AQUA + " left the Game!");
+        gameManager.getPlayers().remove(event.getPlayer());
+        if(gameManager.getPlayers().size() <= 1) {
+            next();
+        }
     }
 }

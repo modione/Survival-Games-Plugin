@@ -6,6 +6,9 @@ import me.modione.sgplugin.game.GameManager.GameState;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 public class LootPhase extends GamePhase {
@@ -38,5 +41,13 @@ public class LootPhase extends GamePhase {
     @Override
     public void onCancel() {
         if(task != null) task.cancel();
+    }
+
+    @EventHandler
+    public void omEntityDamage(EntityDamageEvent event) {
+        if(event.getEntity() instanceof Player) {
+            Player p = (Player) event.getEntity();
+            if(gameManager.getPlayers().contains(p)) event.setCancelled(true);
+        }
     }
 }

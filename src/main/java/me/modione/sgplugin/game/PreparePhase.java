@@ -13,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitTask;
@@ -72,5 +73,13 @@ public class PreparePhase extends GamePhase {
     public void onPlayerInteract(PlayerInteractEvent event) {
         if(assignedSpawns.containsKey(event.getPlayer())) return;
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void omEntityDamage(EntityDamageEvent event) {
+        if(event.getEntity() instanceof Player) {
+            Player p = (Player) event.getEntity();
+            if(gameManager.getPlayers().contains(p)) event.setCancelled(true);
+        }
     }
 }

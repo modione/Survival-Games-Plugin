@@ -2,7 +2,6 @@ package me.modione.sgplugin.game;
 
 import me.modione.sgplugin.SGPlugin;
 import me.modione.sgplugin.base.GamePhase;
-import me.modione.sgplugin.game.GameManager.GameState;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -19,11 +18,6 @@ public class LootPhase extends GamePhase {
     }
 
     @Override
-    public GameState getState() {
-        return GameState.LOOT;
-    }
-
-    @Override
     public void onStart() {
         gameManager.getWorld().setPVP(false);
         gameManager.getPlayers().forEach(player -> {
@@ -37,11 +31,6 @@ public class LootPhase extends GamePhase {
 
     @Override
     public void onEnd() {}
-
-    @Override
-    public void onCancel() {
-        if(task != null) task.cancel();
-    }
 
     @EventHandler
     public void omEntityDamage(EntityDamageEvent event) {

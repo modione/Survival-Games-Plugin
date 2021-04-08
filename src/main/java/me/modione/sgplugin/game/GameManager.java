@@ -1,33 +1,31 @@
 package me.modione.sgplugin.game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import me.modione.sgplugin.SGPlugin;
+import me.modione.sgplugin.base.GamePhase;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.event.HandlerList;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BoundingBox;
 
 public class GameManager {
-    private GameState state = GameState.OFF;
+    private int gameState = 0;
     private final List<Location> spawnLocations;
     private final List<Block> chests;
     private final List<Player> players = new ArrayList<>();
     private final List<Player> spectators = new ArrayList<>();
     private final World world;
-    private final Random random = new Random();
     private final BoundingBox arena;
     private final Location lobbyLocation;
+    private final List<GamePhase> phases;
+    private GamePhase currentPhase;
     private BukkitTask nextEvent;
 
     public GameManager(World world, List<Location> spawnLocations, List<Block> chests, BoundingBox arena, Location lobbyLocation) {
@@ -36,6 +34,12 @@ public class GameManager {
         this.chests = chests;
         this.arena = arena;
         this.lobbyLocation = lobbyLocation;
+        this.phases = Arrays.asList(
+            new PreparePhase(this),
+            new LootPhase(this),
+            new PvPPhase(this),
+            new EndPhase(this)
+        );
     }
 
     public void joinGame(Player player, boolean asSpectator) {
@@ -43,15 +47,19 @@ public class GameManager {
         else players.add(player);
     }
 
-    private void startGame() {
-        this.state = GameState.LOOT;
-
-        nextEvent = Bukkit.getScheduler().runTaskLater(SGPlugin.INSTANCE, () -> {
-
-        }, 1100);
+    public void next() {
+        HandlerList.unregisterAll(currentPhase);
+        if(phases.size() <= gameState++) {
+            gameState = 0;
+            return;
+        }
+        currentPhase = phases.get(gameState);
+        Bukkit.getPluginManager().registerEvents(currentPhase, SGPlugin.INSTANCE);
+        currentPhase.onStart();
     }
 
     public void cancelGame() {
+        Bukkit.getScheduler().cancelTasks(SGPlugin.INSTANCE);
         world.setPVP(true);
         if(nextEvent != null) nextEvent.cancel();
         Bukkit.broadcastMessage(SGPlugin.prefix + ChatColor.RED + "The game has been cancelled!");
@@ -62,23 +70,6 @@ public class GameManager {
                 player.teleport(this.lobbyLocation);
             });
         }, 600);
-    }
-
-    public void endGame(Player winner) {
-        state = GameState.END;
-        winner.sendTitle(ChatColor.GREEN + "You won!", ChatColor.YELLOW + "You are the last person alive!", 10, 60, 15);
-        for(int i = 0; i < 10; i++) {
-            Firework fw = (Firework) world.spawnEntity(winner.getLocation(), EntityType.FIREWORK);
-            FireworkMeta meta = fw.getFireworkMeta();
-            meta.addEffect(FireworkEffect.builder().withFlicker().withTrail().withColor(Color.RED, Color.GREEN).withFade(Color.YELLOW).build());
-            fw.setFireworkMeta(meta);
-        }
-        players.forEach(player -> player.sendTitle(ChatColor.RED + "Game over!", ChatColor.YELLOW + "You didn't win :/!", 10, 60, 15));
-        this.cancelGame();
-    }
-
-    public GameState getGameState() {
-        return state;
     }
 
     public List<Location> getSpawnLocations() {
@@ -97,11 +88,7 @@ public class GameManager {
         return world;
     }
 
-    public void skipToState(GameState state) {
-        this.state = state;
-    }
-
-    public enum GameState {
-        OFF, PREPARED, LOOT, PVP, END
+    public Location getLobbyLocation() {
+        return lobbyLocation;
     }
 }

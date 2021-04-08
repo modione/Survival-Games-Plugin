@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import me.modione.sgplugin.SGPlugin;
 import me.modione.sgplugin.base.GamePhase;
-import me.modione.sgplugin.game.GameManager.GameState;
 import me.modione.sgplugin.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
@@ -16,20 +15,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BoundingBox;
 
 public class PreparePhase extends GamePhase {
     private final Map<Player, BoundingBox> assignedSpawns = new HashMap<>();
-    private BukkitTask countdown;
 
     public PreparePhase(GameManager gameManager) {
         super(gameManager);
-    }
-
-    @Override
-    public GameState getState() {
-        return GameState.PREPARED;
     }
 
     @Override
@@ -41,7 +33,7 @@ public class PreparePhase extends GamePhase {
             player.teleport(spawn);
             player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
         });
-        countdown = Utils.createCountdown(5, (format, seconds) -> {
+        Utils.createCountdown(5, (format, seconds) -> {
             gameManager.getPlayers().forEach(player -> {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(
@@ -52,11 +44,6 @@ public class PreparePhase extends GamePhase {
 
     @Override
     public void onEnd() {}
-
-    @Override
-    public void onCancel() {
-        if(countdown == null) countdown.cancel();
-    }
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {

@@ -2,7 +2,6 @@ package me.modione.sgplugin.game;
 
 import me.modione.sgplugin.SGPlugin;
 import me.modione.sgplugin.base.GamePhase;
-import me.modione.sgplugin.game.GameManager.GameState;
 import me.modione.sgplugin.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
@@ -10,30 +9,22 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitTask;
 
 public class PvPPhase extends GamePhase {
-    private BukkitTask task;
 
     public PvPPhase(GameManager gameManager) {
         super(gameManager);
     }
 
     @Override
-    public GameState getState() {
-        return GameState.PVP;
-    }
-
-    @Override
     public void onStart() {
         gameManager.getPlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 1, 1));
-        task = Utils.createCountdown(10, (format, seconds) -> {
+        Utils.createCountdown(10, (format, seconds) -> {
             gameManager.getPlayers().forEach(player -> {
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(
                     ChatColor.BLUE + "PvP in " + ChatColor.YELLOW + seconds + ChatColor.BLUE + " seconds!"));
@@ -45,17 +36,12 @@ public class PvPPhase extends GamePhase {
                 player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1, 1);
                 player.sendTitle(ChatColor.AQUA + "Fight!", ChatColor.BLUE + "PvP is now enabled!", 10, 60, 15);
             });
-            task = Bukkit.getScheduler().runTaskLater(SGPlugin.INSTANCE, this::next, 12000);
+            Bukkit.getScheduler().runTaskLater(SGPlugin.INSTANCE, this::next, 12000);
         });
     }
 
     @Override
     public void onEnd() {}
-
-    @Override
-    public void onCancel() {
-        if(task != null) task.cancel();
-    }
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {

@@ -8,10 +8,8 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.scheduler.BukkitTask;
 
 public class LootPhase extends GamePhase {
-    private BukkitTask task;
 
     public LootPhase(GameManager gameManager) {
         super(gameManager);
@@ -26,7 +24,7 @@ public class LootPhase extends GamePhase {
         });
         Bukkit.broadcastMessage(SGPlugin.prefix + ChatColor.GREEN + "The Game has been started!");
         Bukkit.broadcastMessage(SGPlugin.prefix + ChatColor.YELLOW + "PVP will be enabled in 1 Minute!");
-        task = Bukkit.getScheduler().runTaskLater(SGPlugin.INSTANCE, this::next, 1100);
+        Bukkit.getScheduler().runTaskLater(SGPlugin.INSTANCE, this::next, 1100);
     }
 
     @Override

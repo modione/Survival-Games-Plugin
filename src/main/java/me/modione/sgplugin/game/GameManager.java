@@ -44,7 +44,14 @@ public class GameManager {
 
     public void joinGame(Player player, boolean asSpectator) {
         if(asSpectator) spectators.add(player);
-        else players.add(player);
+        else {
+            if(players.size() <= spawnLocations.size()) {
+                player.sendMessage(SGPlugin.prefix + ChatColor.RED + "The game is full! You are now a spectator!");
+                spectators.add(player);
+                return;
+            }
+            players.add(player);
+        }
     }
 
     public void next() {

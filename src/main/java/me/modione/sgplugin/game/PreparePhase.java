@@ -8,8 +8,10 @@ import me.modione.sgplugin.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -31,6 +33,9 @@ public class PreparePhase extends GamePhase {
             Location spawn = gameManager.getSpawnLocations().get(SGPlugin.random.nextInt(gameManager.getSpawnLocations().size()));
             assignedSpawns.put(player, BoundingBox.of(spawn, 1, 1, 1));
             player.teleport(spawn);
+            player.setGameMode(GameMode.ADVENTURE);
+            player.setFoodLevel(40);
+            player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
         });
         Utils.createCountdown(5, (format, seconds) -> {

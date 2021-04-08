@@ -4,9 +4,12 @@ import me.modione.sgplugin.SGPlugin;
 import me.modione.sgplugin.base.GamePhase;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 public class LootPhase extends GamePhase {
@@ -19,6 +22,7 @@ public class LootPhase extends GamePhase {
     public void onStart() {
         gameManager.getWorld().setPVP(false);
         gameManager.getPlayers().forEach(player -> {
+            player.setGameMode(GameMode.SURVIVAL);
             player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_AMBIENT, 1, 1);
             player.sendTitle(ChatColor.GREEN + "Go!!!", ChatColor.YELLOW + "Let the Survival Games Begin!", 10, 60, 15);
         });
@@ -36,5 +40,15 @@ public class LootPhase extends GamePhase {
             Player p = (Player) event.getEntity();
             if(gameManager.getPlayers().contains(p)) event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        if(gameManager.getPlayers().contains(event.getPlayer())) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if(gameManager.getPlayers().contains(event.getPlayer())) event.setCancelled(true);
     }
 }

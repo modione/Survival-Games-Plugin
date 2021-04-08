@@ -2,7 +2,6 @@ package me.modione.sgplugin.commands;
 
 import java.util.List;
 import me.modione.sgplugin.SGPlugin;
-import me.modione.sgplugin.listener.onGameStart;
 import me.modione.sgplugin.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

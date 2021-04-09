@@ -12,6 +12,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BoundingBox;
 
@@ -19,6 +20,7 @@ public class GameManager {
     private int gameState = -1;
     private final List<Location> spawnLocations;
     private final List<Block> chests;
+    private final List<ItemStack> loot;
     private final List<Player> players = new ArrayList<>();
     private final List<Player> spectators = new ArrayList<>();
     private final World world;
@@ -28,12 +30,13 @@ public class GameManager {
     private GamePhase currentPhase;
     private BukkitTask nextEvent;
 
-    public GameManager(World world, List<Location> spawnLocations, List<Block> chests, BoundingBox arena, Location lobbyLocation) {
+    public GameManager(World world, List<Location> spawnLocations, List<Block> chests, List<ItemStack> loot, BoundingBox arena, Location lobbyLocation) {
         this.world = world;
         this.spawnLocations = spawnLocations;
         this.chests = chests;
         this.arena = arena;
         this.lobbyLocation = lobbyLocation;
+        this.loot = loot;
         this.phases = Arrays.asList(
             new PreparePhase(this),
             new LootPhase(this),
@@ -64,6 +67,8 @@ public class GameManager {
         HandlerList.unregisterAll(currentPhase);
         if(phases.size() <= gameState++) {
             gameState = -1;
+            players.clear();
+            spectators.clear();
             return;
         }
         currentPhase = phases.get(gameState);
@@ -85,6 +90,8 @@ public class GameManager {
                 player.teleport(this.lobbyLocation);
             });
         }, 600);
+        players.clear();
+        spectators.clear();
     }
 
     public List<Location> getSpawnLocations() {
@@ -105,5 +112,9 @@ public class GameManager {
 
     public Location getLobbyLocation() {
         return lobbyLocation;
+    }
+
+    public int getGameState() {
+        return gameState;
     }
 }
